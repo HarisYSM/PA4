@@ -32,7 +32,7 @@ else:
         """
 
         # Request a response from OpenAI using the updated chat API
-        response = openai.chat_completions.create(
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  # You can use other models like GPT-4 if you prefer
             messages=[{"role": "system", "content": "You are a helpful assistant."},
                       {"role": "user", "content": prompt}],
