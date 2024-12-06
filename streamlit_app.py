@@ -34,7 +34,7 @@ else:
         # Request a response from OpenAI using the client
         try:
             completion = client.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 prompt=prompt,
                 max_tokens=100
             )
