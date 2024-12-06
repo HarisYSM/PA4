@@ -4,7 +4,7 @@ import openai
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
-    "This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
+    "Update 20:45, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
     "and tags based on a provided book summary. "
     "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
 )
@@ -31,12 +31,12 @@ else:
         Please provide the Library of Congress subject headings as a list of strings (8 subject headings) and the tags as a list of strings. Each list should be returned separately.
         """
 
-        # Request a response from OpenAI using the updated Chat API (v1.0.0+)
+        # Request a response from OpenAI using the new API
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  # You can use other models like GPT-4 if you prefer
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt},
+                {"role": "user", "content": prompt}
             ],
             max_tokens=300
         )
@@ -47,6 +47,7 @@ else:
         # Split the response into two parts: subject headings and tags
         st.write("### Generated Subject Headings and Tags")
 
+        # Assuming the response contains the lists in a simple format, split and display them
         try:
             # Separate the subject headings and tags using simple text parsing
             subject_headings = []
