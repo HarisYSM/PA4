@@ -7,7 +7,7 @@ import openai
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
-    "Update 20:45, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
+    "Update 21:33, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
     "and tags based on a provided book summary. "
     "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
 )
