@@ -36,7 +36,7 @@ else:
             completion = client.completions.create(
                 model="gpt-3.5-turbo",
                 prompt=prompt,
-                max_tokens=300
+                max_tokens=100
             )
 
             # Extract the response text
