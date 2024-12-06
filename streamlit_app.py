@@ -15,7 +15,7 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
     # Initialize the OpenAI client with the provided API key
-    client = OpenAI(api_key="openai_api_key")
+    client = OpenAI(api_key=openai_api_key)
 
     # Ask the user for the book summary
     book_summary = st.text_area("Enter the book summary here:")
@@ -34,9 +34,9 @@ else:
         # Request a response from OpenAI using the client
         try:
             completion = client.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-3.5-turbo",
                 prompt=prompt,
-                max_tokens=100
+                max_tokens=300
             )
 
             # Extract the response text
