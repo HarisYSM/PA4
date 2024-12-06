@@ -15,7 +15,7 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
     # Initialize the OpenAI client with the provided API key
-    client = OpenAI(api_key=openai_api_key)
+    client = OpenAI(api_key="openai_api_key")
 
     # Ask the user for the book summary
     book_summary = st.text_area("Enter the book summary here:")
