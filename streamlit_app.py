@@ -31,16 +31,15 @@ else:
         Please provide the Library of Congress subject headings as a list of strings (8 subject headings) and the tags as a list of strings. Each list should be returned separately.
         """
 
-        # Request a response from OpenAI using the updated chat API
-        response = openai.ChatCompletion.create(
+        # Request a response from OpenAI using the new API
+        response = openai.Completion.create(
             model="gpt-3.5-turbo",  # You can use other models like GPT-4 if you prefer
-            messages=[{"role": "system", "content": "You are a helpful assistant."},
-                      {"role": "user", "content": prompt}],
+            prompt=prompt,
             max_tokens=300
         )
 
         # Extract the response text
-        response_text = response['choices'][0]['message']['content'].strip()
+        response_text = response.choices[0].text.strip()
 
         # Split the response into two parts: subject headings and tags
         st.write("### Generated Subject Headings and Tags")
