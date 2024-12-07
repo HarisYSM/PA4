@@ -45,6 +45,8 @@ else:
                 max_tokens=200,
                 temperature=0.7
             )
+            response = completion['choices'][0]['message']['content']
+            print(response)
 
             # Extract the response text
             response_text = completion.choices[0].text.strip()
