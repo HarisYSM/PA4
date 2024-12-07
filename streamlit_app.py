@@ -4,7 +4,7 @@ from openai import OpenAI
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
-    "This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
+    "Updated 23:43-07-12-24, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
     "and tags based on a provided book summary. "
     "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
 )
@@ -27,11 +27,11 @@ else:
     if book_summary:
         # Define the prompt to generate subject headings and tags
         prompt = f"""
-        Given the following book summary, provide the 8 most relevant Library of Congress subject headings related to the book's subject and the tags for the book summary.
+        Given the following book summary, provide the 3 most relevant Library of Congress subject headings related to the book's subject and the tags for the book summary.
 
         Book Summary: {book_summary}
 
-        Please provide the Library of Congress subject headings as a list of strings (8 subject headings) and the tags as a list of strings. Each list should be returned separately.
+        Please provide the Library of Congress subject headings as a list of strings (3 subject headings) and the tags as a list of strings. Each list should be returned separately.
         """
 
         # Request a response from OpenAI using the client
@@ -39,7 +39,7 @@ else:
             completion = client.completions.create(
                 model="gpt-3.5-turbo",
                 prompt=prompt,
-                max_tokens=300
+                max_tokens=100
             )
 
             # Extract the response text
