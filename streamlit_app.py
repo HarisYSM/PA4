@@ -4,7 +4,7 @@ from openai import OpenAI
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
-    "Updated 23:44-07-12-24, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
+    "Updated 23:45-07-12-24, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
     "and tags based on a provided book summary. "
     "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
 )
@@ -39,10 +39,11 @@ else:
             completion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},  # บทบาทของโมเดล
-                    {"role": "user", "content": prompt},  # ใส่ prompt ตรงนี้
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt},
                 ],
                 max_tokens=200,
+                temperature=0.7
             )
 
             # Extract the response text
