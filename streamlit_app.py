@@ -38,9 +38,12 @@ else:
         try:
             completion = client.completions.create(
                 model="gpt-3.5-turbo",
-                prompt=prompt,
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt},
+                ],
                 max_tokens=100
-            )
+            )    
 
             # Extract the response text
             response_text = completion.choices[0].text.strip()
