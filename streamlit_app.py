@@ -9,26 +9,29 @@ st.write(
     "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
 )
 
-# Request OpenAI API key from the user
-openai_api_key = st.text_input("Enter your OpenAI API Key", type="password")
+# Sidebar for API key input
+st.sidebar.title("🔑 API Key Input")
+openai_api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+
 if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
+    st.info("Please add your OpenAI API key in the sidebar to continue.", icon="🗝️")
 else:
     # Initialize the OpenAI client with the provided API key
     client = OpenAI(api_key=openai_api_key)
 
-    # Ask the user for the book summary
+    # Main app content
+    st.header("📖 Generate Subject Headings and Tags")
     book_summary = st.text_area("Enter the book summary here:")
 
     # Check if the user has provided a book summary
     if book_summary:
         # Define the prompt to generate subject headings and tags
         prompt = f"""
-        Given the following book summary, provide the 4 most relevant Library of Congress subject headings related to the book's subject and the tags for the book summary.
+        Given the following book summary, provide the 8 most relevant Library of Congress subject headings related to the book's subject and the tags for the book summary.
 
         Book Summary: {book_summary}
 
-        Please provide the Library of Congress subject headings as a list of strings (4 subject headings) and the tags as a list of strings. Each list should be returned separately.
+        Please provide the Library of Congress subject headings as a list of strings (8 subject headings) and the tags as a list of strings. Each list should be returned separately.
         """
 
         # Request a response from OpenAI using the client
@@ -36,7 +39,7 @@ else:
             completion = client.completions.create(
                 model="gpt-3.5-turbo",
                 prompt=prompt,
-                max_tokens=100
+                max_tokens=300
             )
 
             # Extract the response text
