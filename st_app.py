@@ -11,8 +11,13 @@ api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 # App Title and Description
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
-    "This app generates the 8 most relevant Library of Congress subject headings "
-    "and descriptive tags for a given book summary using OpenAI's GPT-3.5 model."
+    "This app uses **Natural Language Processing (NLP)** to transform natural language from book summaries into structured, "
+    "controlled language like Library of Congress subject headings. It generates **the 8 most** relevant subject headings and "
+    "descriptive tags for a given book summary using OpenAI's GPT-3.5 model."
+)
+st.write(
+    "The generated outputs are helpful for library cataloging, organizing resources, and analyzing library collections to improve "
+    "resource management and acquisition strategies."
 )
 
 # Input for Book Summary
