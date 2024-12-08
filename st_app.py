@@ -19,6 +19,13 @@ st.write(
     "for purchasing new books based on library statistics. 🏫"
 )
 
+st.write(
+    "**Note** : 🎯 The confidence scores may vary slightly when results are regenerated."
+    "This is normal due to the probabilistic nature of the system and does not necessarily indicate a change"
+    "in the underlying accuracy or reliability of the predictions."
+    "🔢 The word count for the book summary input will be displayed below."
+)
+
 # Input for Book Summary
 st.subheader("Book Summary Input")
 book_summary = st.text_area("Enter the book summary here:")
