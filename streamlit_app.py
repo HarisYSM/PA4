@@ -1,98 +1,84 @@
 import streamlit as st
-import openai 
+import openai
 import pandas as pd
+import json
 
-# Title and description for the app
-st.title("📚 Book Summary Subject Headings and Tags Generator")
-st.write(
-    "Updated 23:47-07-12-24, This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
-    "and tags based on a provided book summary. "
-    "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
+# Sidebar for API Key
+st.sidebar.title("Settings")
+st.sidebar.text("Provide your OpenAI API Key")
+api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+
+# App Title and Description
+st.title("📚 Library of Congress Subject Headings and Tags Generator")
+st.markdown(
+    """<p>
+    <strong>Generate Subject Headings and Tags for a Book Summary</strong><br>
+    This app uses OpenAI's GPT-3.5 Turbo model to generate the 8 most relevant Library of Congress subject headings 
+    and tags based on a provided book summary.
+    </p>""",
+    unsafe_allow_html=True,
 )
 
-# Sidebar for API key input
-st.sidebar.title("🔑 API Key Input")
-openai_api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+# Input for Book Summary
+st.subheader("Enter Book Summary")
+book_summary = st.text_area("Paste the book summary here:")
 
-if not openai_api_key:
-    st.info("Please add your OpenAI API key in the sidebar to continue.", icon="🗝️")
+# Check if inputs are provided
+if not api_key:
+    st.warning("Please enter your OpenAI API Key in the sidebar to proceed.")
+elif not book_summary:
+    st.warning("Please provide a book summary to proceed.")
 else:
-    # Initialize the OpenAI client with the provided API key
-    openai.api_key = openai_api_key
+    # Define the OpenAI prompt
+    prompt = f"""
+    Given the following book summary, provide the 8 most relevant Library of Congress subject headings related to the book's subject and the tags for the book summary.
 
-    # Main app content
-    st.header("📖 Generate Subject Headings and Tags")
-    book_summary = st.text_area("Enter the book summary here:")
+    Book Summary: {book_summary}
 
-    # Check if the user has provided a book summary
-    if book_summary:
-        # Define the prompt to generate subject headings and tags
-        prompt = f"""
-        Given the following book summary, provide the 3 most relevant Library of Congress subject headings related to the book's subject and the tags for the book summary.
+    Please provide the Library of Congress subject headings as a list of strings (8 subject headings) and the tags as a list of strings in the following JSON format:
+    {{
+        "subject_headings": ["heading1", "heading2", ...],
+        "tags": ["tag1", "tag2", ...]
+    }}
+    """
 
-        Book Summary: {book_summary}
-
-        Please provide the Library of Congress subject headings as a list of strings (3 subject headings) and the tags as a list of strings. Each list should be returned separately.
-        """
-
-        # Request a response from OpenAI using the client
+    # Call OpenAI API for Subject Headings and Tags
+    def generate_subject_headings_and_tags(summary, api_key):
+        openai.api_key = api_key
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "system", "content": "You are an assistant that helps generate Library of Congress subject headings and tags for book summaries."},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=200
+                max_tokens=500,
+                temperature=0
             )
-            result = response["choices"][0]["message"]["content"].strip()
-            st.success("Tags and Headline generated successfully!")
-
-            # Extract the response text
-            #response_text = completion.choices[0].text.strip()
-
-            # Split the response into two parts: subject headings and tags
-            st.write("### Generated Subject Headings and Tags")
-            st.write(result)
-
-        #except openai.error.OpenAIError as e:
-            # Handle errors returned by the OpenAI API
-            #st.error(f"An error occurred while communicating with OpenAI: {e}")
-
-            try:
-                # Parse the response into subject headings and tags
-                subject_headings = []
-                tags = []
-
-                lines = result.split("\n")
-                for line in lines:
-                    if line.lower().startswith("subject headings"):
-                        subject_headings = line[len("Subject Headings: "):].strip().split(", ")
-                    elif line.lower().startswith("tags"):
-                        tags = line[len("Tags: "):].strip().split(", ")
-
-                # Display results in a Pandas DataFrame
-                output_data = {
-                    "Category": ["Subject Headings", "Tags"],
-                    "Content": [", ".join(subject_headings), ", ".join(tags)]
-                }
-                output_df = pd.DataFrame(output_data)
-
-                st.success("Tags and Headline generated successfully!")
-                st.write("### Generated Subject Headings and Tags")
-                st.dataframe(output_df)
-
-                # Add a download button for the DataFrame
-                st.download_button(
-                    label="Download Results as CSV",
-                    data=output_df.to_csv(index=False),
-                    file_name="subject_headings_and_tags.csv",
-                    mime="text/csv"
-                )
-            except Exception as e:
-                st.error(f"Error parsing the response: {e}")
-
+            return response.choices[0].message["content"]
         except Exception as e:
-            st.error(f"An error occurred while communicating with OpenAI: {e}")
-    else:
-        st.info("Please enter a book summary to proceed.")
+            raise Exception(f"OpenAI API error: {e}")
+
+    # Generate and Display Results
+    if st.button("Generate Subject Headings and Tags"):
+        with st.spinner("Generating..."):
+            try:
+                result = generate_subject_headings_and_tags(book_summary, api_key)
+                result_dict = json.loads(result)
+                subject_headings = result_dict.get("subject_headings", [])
+                tags = result_dict.get("tags", [])
+
+                # Convert to DataFrames for Display
+                subject_headings_df = pd.DataFrame(subject_headings, columns=["Subject Headings"])
+                tags_df = pd.DataFrame(tags, columns=["Tags"])
+
+                # Display Results
+                st.subheader("Library of Congress Subject Headings")
+                st.dataframe(subject_headings_df)
+
+                st.subheader("Tags for the Book Summary")
+                st.dataframe(tags_df)
+
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+
