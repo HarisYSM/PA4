@@ -37,7 +37,6 @@ else:
 
         # Request a response from OpenAI using the client
         try:
-
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
