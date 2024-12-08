@@ -13,6 +13,8 @@ st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
     "This app generates the 8 most relevant 🏷️ Library of Congress subject headings, descriptive tags, "
     "and their confidence scores based on a provided book summary using OpenAI's GPT-3.5 model. 🤖"
+)
+st.write(
     "These outputs can help with categorizing and managing library resources, and aid in decision-making "
     "for purchasing new books based on library statistics. 🏫"
 )
