@@ -1,6 +1,5 @@
 import streamlit as st
-import openai 
-import pandas as pd
+from openai import OpenAI
 
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
