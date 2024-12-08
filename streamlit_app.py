@@ -55,9 +55,9 @@ else:
             st.write("### Generated Subject Headings and Tags")
             st.write(result)
 
-        except openai.error.OpenAIError as e:
+        #except openai.error.OpenAIError as e:
             # Handle errors returned by the OpenAI API
-            st.error(f"An error occurred while communicating with OpenAI: {e}")
+            #st.error(f"An error occurred while communicating with OpenAI: {e}")
 
             try:
                 # Parse the response into subject headings and tags
