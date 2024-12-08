@@ -35,7 +35,7 @@ def generate_subject_headings_and_tags(summary, apikey):
         )
 
         # Return the response content
-        return response.choices[0]['message']['content']
+        return response.choices[0].message.content
     except Exception as e:
         raise Exception(f"OpenAI API error: {e}")
 
