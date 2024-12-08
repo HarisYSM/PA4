@@ -43,14 +43,13 @@ else:
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=300,
-                temperature=0.7,
+                max_tokens=200
             )
             result = response["choices"][0]["message"]["content"].strip()
             st.success("Tags and Headline generated successfully!")
 
             # Extract the response text
-            #response_text = completion.choices[0].text.strip()
+            response_text = completion.choices[0].text.strip()
 
             # Split the response into two parts: subject headings and tags
             st.write("### Generated Subject Headings and Tags")
