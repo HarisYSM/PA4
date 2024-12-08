@@ -36,7 +36,7 @@ else:
 
         # Request a response from OpenAI using the client
         try:
-            completion = openai.ChatCompletion.create(
+            completion = OpenAI.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
