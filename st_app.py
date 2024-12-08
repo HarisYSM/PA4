@@ -24,6 +24,14 @@ st.write(
 st.subheader("Book Summary Input")
 book_summary = st.text_area("Enter the book summary here:")
 
+# Calculate and display the word count
+if book_summary:
+    word_count = len(book_summary.split())
+    st.write(f"**Word Count:** {word_count} words")
+else:
+    st.write("No text entered. Word count will appear here.")
+
+
 # Define prompt
 PROMPT = """
 You are a helpful assistant for generating Library of Congress Subject Headings and tags. Your task is to analyze the provided book summary and output the results in JSON format.
