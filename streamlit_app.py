@@ -36,17 +36,15 @@ else:
 
         # Request a response from OpenAI using the client
         try:
-            completion = OpenAI.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", 
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt},
+                    {"role": "user", "content": prompt}
                 ],
                 max_tokens=200,
-                temperature=0.7
             )
-            response = completion['choices'][0]['message']['content']
-            print(response)
+            print(response["choices"][0]["text"]) 
 
             # Extract the response text
             response_text = completion.choices[0].text.strip()
