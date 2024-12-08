@@ -49,7 +49,7 @@ else:
             st.success("Tags and Headline generated successfully!")
 
             # Extract the response text
-            response_text = completion.choices[0].text.strip()
+            #response_text = completion.choices[0].text.strip()
 
             # Split the response into two parts: subject headings and tags
             st.write("### Generated Subject Headings and Tags")
