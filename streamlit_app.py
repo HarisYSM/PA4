@@ -64,7 +64,7 @@ else:
                 subject_headings = []
                 tags = []
 
-                lines = response_text.split("\n")
+                lines = result.split("\n")
                 for line in lines:
                     if line.lower().startswith("subject headings"):
                         subject_headings = line[len("Subject Headings: "):].strip().split(", ")
