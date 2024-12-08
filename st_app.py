@@ -1,6 +1,7 @@
 import streamlit as st
 import openai
 import pandas as pd
+import json
 
 # Sidebar for API Key
 st.sidebar.title("Settings")
@@ -10,32 +11,54 @@ api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 # App Title and Description
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
-    "Updated 15:05 08-12-24. This app uses OpenAI's GPT-3.5 model to generate the 8 most relevant Library of Congress subject headings "
-    "and tags based on a provided book summary. "
-    "To use this app, you need to provide your OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys)."
+    "Updated 15:20 08-12-24. This app generates the 8 most relevant Library of Congress subject headings "
+    "and descriptive tags for a given book summary using OpenAI's GPT-3.5 model."
 )
 
 # Input for Book Summary
 st.subheader("Book Summary Input")
 book_summary = st.text_area("Enter the book summary here:")
 
-# Function to generate subject headings and tags
+# Define prompt
+PROMPT = """
+You are a helpful assistant for generating Library of Congress Subject Headings and tags. Your task is to analyze the provided book summary and output the results in JSON format.
+
+1. Generate the following outputs:
+   - Subject Headings: A list of the 8 most relevant Library of Congress Subject Headings for the book.
+   - Tags: A list of descriptive tags summarizing the book's main topics and themes.
+
+2. Output the result in the following JSON format:
+{
+    "subject_headings": [
+        "Subject Heading 1",
+        "Subject Heading 2",
+        ...
+    ],
+    "tags": [
+        "Tag 1",
+        "Tag 2",
+        ...
+    ]
+}
+"""
+
+# Function to call OpenAI API
 def generate_subject_headings_and_tags(summary, apikey):
     try:
-        # Set the API key
+        # Set the API key dynamically
         openai.api_key = apikey
 
-        # Call the OpenAI API
+        # Call OpenAI API
         response = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant for generating Library of Congress subject headings."},
-                {"role": "user", "content": f"Given the following book summary, provide the 8 most relevant Library of Congress subject headings and tags:\n\n{summary}"},
+                {"role": "system", "content": PROMPT},
+                {"role": "user", "content": f"Analyze the following book summary:\n{summary}"},
             ],
         )
 
-        # Return the response content
-        return response.choices[0].message.content
+        # Parse the response content
+        return json.loads(response.choices[0].message.content)
     except Exception as e:
         raise Exception(f"OpenAI API error: {e}")
 
@@ -46,51 +69,25 @@ if api_key and book_summary:
             try:
                 # Generate subject headings and tags
                 analysis_result = generate_subject_headings_and_tags(book_summary, api_key)
-                
-                # Display the result
-                st.subheader("Generated Subject Headings and Tags")
-                st.write(analysis_result)
 
-                # Parse the result into subject headings and tags
+                # Display the results
+                if "subject_headings" in analysis_result:
+                    subject_df = pd.DataFrame(analysis_result["subject_headings"], columns=["Library of Congress Subject Headings"])
+                    st.subheader("Library of Congress Subject Headings:")
+                    st.dataframe(subject_df)
+                else:
+                    st.info("No subject headings found.")
 
-                try:
-                    # Extracting subject headings and tags from the markdown list
-                    lines = analysis_result.split("\n")
-                    subject_headings = []
-                    tags = []
-
-                    for line in lines:
-                        # Parse lines starting with a markdown list indicator ("-", "*", or "1.")
-                        if line.strip().startswith("-") or line.strip().startswith("*"):
-                            cleaned_line = line.strip("-* ").strip()
-                            # Add to the appropriate list based on the section
-                            if "Subject Headings:" in analysis_result:
-                                subject_headings.append(cleaned_line)
-                            elif "Tags:" in analysis_result:
-                                tags.append(cleaned_line)
-
-                    # Display the subject headings and tags in tables
-                    if subject_headings:
-                        subject_df = pd.DataFrame(subject_headings, columns=["Library of Congress Subject Headings"])
-                        st.subheader("Library of Congress Subject Headings:")
-                        st.dataframe(subject_df)
-                    else:
-                        st.info("No subject headings found.")
-
-                    if tags:
-                        tags_df = pd.DataFrame(tags, columns=["Tags"])
-                        st.subheader("Tags for the Book Summary:")
-                        st.dataframe(tags_df)
-                    else:
-                        st.info("No tags found.")
-
-                except Exception as e:
-                    st.error(f"Error parsing the response: {e}")
+                if "tags" in analysis_result:
+                    tags_df = pd.DataFrame(analysis_result["tags"], columns=["Tags"])
+                    st.subheader("Tags for the Book Summary:")
+                    st.dataframe(tags_df)
+                else:
+                    st.info("No tags found.")
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
-else:
-    if not api_key:
-        st.info("Please provide your OpenAI API key to continue.")
-    elif not book_summary:
-        st.info("Please enter a book summary to proceed.")
+elif not api_key:
+    st.info("Please provide your OpenAI API key.")
+elif not book_summary:
+    st.info("Please provide a book summary.")
