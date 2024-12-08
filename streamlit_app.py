@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import pandas as pd
 
 # Title and description for the app
@@ -18,7 +18,7 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key in the sidebar to continue.", icon="🗝️")
 else:
     # Initialize the OpenAI client with the provided API key
-    openai.api_key = openai_api_key
+    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'],  # this is also the default, it can be omitted)
 
     # Main app content
     st.header("📖 Generate Subject Headings and Tags")
