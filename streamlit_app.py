@@ -17,7 +17,7 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key in the sidebar to continue.", icon="🗝️")
 else:
     # Initialize the OpenAI client with the provided API key
-    client = OpenAI(api_key=openai_api_key)
+    client = openai(api_key=openai_api_key)
 
     # Main app content
     st.header("📖 Generate Subject Headings and Tags")
