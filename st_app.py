@@ -12,7 +12,7 @@ api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 st.title("📚 Book Summary Subject Headings and Tags Generator")
 st.write(
     "This app generates the 8 most relevant 🏷️ Library of Congress subject headings, descriptive tags, "
-    "and their confidence scores based on a provided book summary using OpenAI's GPT-3.5 model. 🤖"
+    "and their confidence scores based on a provided book summary using OpenAI's GPT-3.5 model. 🤖 "
 )
 st.write(
     "These outputs can help with categorizing and managing library resources, and aid in decision-making "
@@ -20,9 +20,11 @@ st.write(
 )
 
 st.write(
-    "**Note** : 🎯 The confidence scores may vary slightly when results are regenerated."
-    "This is normal due to the probabilistic nature of the system and does not necessarily indicate a change"
-    "in the underlying accuracy or reliability of the predictions."
+    "**Note** : 🎯 The confidence scores may vary slightly when results are regenerated. "
+    "This is normal due to the probabilistic nature of the system and does not necessarily indicate a change "
+    "in the underlying accuracy or reliability of the predictions. "
+)
+st.write(
     "🔢 The word count for the book summary input will be displayed below."
 )
 
