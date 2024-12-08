@@ -52,27 +52,37 @@ if api_key and book_summary:
                 st.write(analysis_result)
 
                 # Parse the result into subject headings and tags
+
                 try:
-                    # Extracting subject headings and tags
+                    # Extracting subject headings and tags from the markdown list
                     lines = analysis_result.split("\n")
                     subject_headings = []
                     tags = []
 
                     for line in lines:
-                        if line.lower().startswith("subject headings"):
-                            subject_headings = line[len("Subject Headings: "):].strip().split(", ")
-                        elif line.lower().startswith("tags"):
-                            tags = line[len("Tags: "):].strip().split(", ")
+                        # Parse lines starting with a markdown list indicator ("-", "*", or "1.")
+                        if line.strip().startswith("-") or line.strip().startswith("*"):
+                            cleaned_line = line.strip("-* ").strip()
+                            # Add to the appropriate list based on the section
+                            if "Subject Headings:" in analysis_result:
+                                subject_headings.append(cleaned_line)
+                            elif "Tags:" in analysis_result:
+                                tags.append(cleaned_line)
 
-                    # Show subject headings and tags in a dataframe
-                    subject_df = pd.DataFrame(subject_headings, columns=["Library of Congress Subject Headings"])
-                    tags_df = pd.DataFrame(tags, columns=["Tags"])
+                    # Display the subject headings and tags in tables
+                    if subject_headings:
+                        subject_df = pd.DataFrame(subject_headings, columns=["Library of Congress Subject Headings"])
+                        st.subheader("Library of Congress Subject Headings:")
+                        st.dataframe(subject_df)
+                    else:
+                        st.info("No subject headings found.")
 
-                    st.subheader("Library of Congress Subject Headings:")
-                    st.dataframe(subject_df)
-
-                    st.subheader("Tags for the Book Summary:")
-                    st.dataframe(tags_df)
+                    if tags:
+                        tags_df = pd.DataFrame(tags, columns=["Tags"])
+                        st.subheader("Tags for the Book Summary:")
+                        st.dataframe(tags_df)
+                    else:
+                        st.info("No tags found.")
 
                 except Exception as e:
                     st.error(f"Error parsing the response: {e}")
