@@ -37,23 +37,24 @@ PROMPT = """
 You are a helpful assistant for generating Library of Congress Subject Headings and tags. Your task is to analyze the provided book summary and output the results in JSON format.
 
 1. Generate the following outputs:
-   - Subject Headings: A list of the 8 most relevant Library of Congress Subject Headings for the book.
-   - Tags: A list of descriptive tags summarizing the book's main topics and themes.
+   - Subject Headings: A list of the 8 most relevant Library of Congress Subject Headings for the book, along with a confidence score (0-100%) for each heading, indicating its relevance.
+   - Tags: A list of descriptive tags summarizing the book's main topics and themes, along with a confidence score (0-100%) for each tag, indicating its relevance.
 
 2. Output the result in the following JSON format:
 {
     "subject_headings": [
-        "Subject Heading 1",
-        "Subject Heading 2",
+        {"heading": "Subject Heading 1", "confidence": 95},
+        {"heading": "Subject Heading 2", "confidence": 90},
         ...
     ],
     "tags": [
-        "Tag 1",
-        "Tag 2",
+        {"tag": "Tag 1", "confidence": 92},
+        {"tag": "Tag 2", "confidence": 88},
         ...
     ]
 }
 """
+
 
 # Function to call OpenAI API
 def generate_subject_headings_and_tags(summary, apikey):
@@ -85,14 +86,20 @@ if api_key and book_summary:
 
                 # Display the results
                 if "subject_headings" in analysis_result:
-                    subject_df = pd.DataFrame(analysis_result["subject_headings"], columns=["Library of Congress Subject Headings"])
+                    subject_data = analysis_result["subject_headings"]
+                    subject_df = pd.DataFrame(subject_data)
+                    subject_df.columns = ["Library of Congress Subject Headings", "Confidence Score"]
+
                     st.subheader("Library of Congress Subject Headings:")
                     st.dataframe(subject_df)
                 else:
                     st.info("No subject headings found.")
 
                 if "tags" in analysis_result:
-                    tags_df = pd.DataFrame(analysis_result["tags"], columns=["Tags"])
+                    tags_data = analysis_result["tags"]
+                    tags_df = pd.DataFrame(tags_data)
+                    tags_df.columns = ["Tags", "Confidence Score"]
+
                     st.subheader("Tags for the Book Summary:")
                     st.dataframe(tags_df)
                 else:
