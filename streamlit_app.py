@@ -1,5 +1,6 @@
 import streamlit as st
-from openai import OpenAI
+import openai
+import pandas as pd
 
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
@@ -17,7 +18,7 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key in the sidebar to continue.", icon="🗝️")
 else:
     # Initialize the OpenAI client with the provided API key
-    client = OpenAI(api_key=openai_api_key)
+    openai.api_key = openai_api_key
 
     # Main app content
     st.header("📖 Generate Subject Headings and Tags")
@@ -38,16 +39,19 @@ else:
         try:
 
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo", 
+                model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "user", "content": prompt}
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt},
                 ],
-                max_tokens=200,
+                max_tokens=300,
+                temperature=0.7,
             )
-            print(response["choices"][0]["text"]) 
+            result = response["choices"][0]["message"]["content"].strip()
+            st.success("Tags and Headline generated successfully!")
 
             # Extract the response text
-            response_text = completion.choices[0].text.strip()
+            #response_text = completion.choices[0].text.strip()
 
             # Split the response into two parts: subject headings and tags
             st.write("### Generated Subject Headings and Tags")
