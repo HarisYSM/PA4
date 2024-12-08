@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import openai 
 
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
