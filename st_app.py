@@ -35,7 +35,7 @@ You are a helpful assistant for generating Library of Congress Subject Headings 
 
 1. Generate the following outputs:
    - Subject Headings: A list of the 8 most relevant Library of Congress Subject Headings for the book, along with a confidence score (0-100%) for each heading, indicating its relevance.
-   - Tags: A list of descriptive tags summarizing the book's main topics and themes, along with a confidence score (0-100%) for each tag, indicating its relevance.
+   - Tags: A list of descriptive 8 tags summarizing the book's main topics and themes, along with a confidence score (0-100%) for each tag, indicating its relevance.
 
 2. Output the result in the following JSON format:
 {
