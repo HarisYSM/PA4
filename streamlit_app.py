@@ -1,5 +1,6 @@
 import streamlit as st
 import openai 
+import pandas as pd
 
 # Title and description for the app
 st.title("📚 Book Summary Subject Headings and Tags Generator")
@@ -71,12 +72,24 @@ else:
                     elif line.lower().startswith("tags"):
                         tags = line[len("Tags: "):].strip().split(", ")
 
-                # Display the results
-                st.subheader("Library of Congress Subject Headings:")
-                st.write(subject_headings)
+                # Display results in a Pandas DataFrame
+                output_data = {
+                    "Category": ["Subject Headings", "Tags"],
+                    "Content": [", ".join(subject_headings), ", ".join(tags)]
+                }
+                output_df = pd.DataFrame(output_data)
 
-                st.subheader("Tags for the Book Summary:")
-                st.write(tags)
+                st.success("Tags and Headline generated successfully!")
+                st.write("### Generated Subject Headings and Tags")
+                st.dataframe(output_df)
+
+                # Add a download button for the DataFrame
+                st.download_button(
+                    label="Download Results as CSV",
+                    data=output_df.to_csv(index=False),
+                    file_name="subject_headings_and_tags.csv",
+                    mime="text/csv"
+                )
             except Exception as e:
                 st.error(f"Error parsing the response: {e}")
 
